@@ -1,6 +1,6 @@
 
-var rows = 5,
-    cols = 5,
+var rows = 35,
+    cols = 50,
     sideLength = 30,
     gutter = 2,
     margin = { top: 50, right: 0, bottom: 100, left: 30 },
@@ -12,10 +12,11 @@ var rows = 5,
       empty : "#ffffff",
       fillHover : "#596970",
       emptyHover : "#eeeeee"
-    };
+    },
+    gridgridCanvas = null;
 
 
-function getData(rows, cols, baseColor) {
+function getBaseData() {
   var arr = [];
 
   for (var i = 1; i <= rows; i++) {
@@ -23,7 +24,7 @@ function getData(rows, cols, baseColor) {
       arr.push({
         "row" : i,
         "col" : c,
-        "color" : baseColor
+        "color" : colors.fill
       });
     };
   };
@@ -43,18 +44,36 @@ function getFillColor(cssHex) {
   if (cssHex === colors.fill) {
     return colors.fill;
   }
-  
   return (cssHex === colors.fillHover) ? colors.fill : colors.empty;
 }
 
-var data = getData(rows, cols, colors.fill);
+function getOffset(pos) {
+  var pos = pos - 1;
+  var offset = (pos) * sideLength + (gutter * pos);
+  return offset;
+}
 
-var grid = d3.select('#chart').append('svg')
+function save() {
+  var arr = [];
+  gridCanvas.each(function(data){
+    arr.push(data);
+  });
+  console.log(JSON.stringify(arr));
+}
+
+function clearGrid() {
+  $('#chart').html('');
+}
+
+function initializeGrid() {
+  return d3.select('#chart').append('svg')
                 .attr("width", width)
                 .attr("height", height)
                 .attr("class", "chart");
+}
 
-var canvas = grid.selectAll(".col")
+function loadGrid(grid, data) {
+  gridCanvas = grid.selectAll(".col")
           .data(data)
           .enter().append("rect")
           .attr("x", function(d) { return getOffset(d.col); })
@@ -73,56 +92,6 @@ var canvas = grid.selectAll(".col")
           })
           .on("click", function(box){
             box.color = getToggleColor(this.style.fill);
-            console.log('*click', box);
-
-            this.style.fill = getToggleColor(this.style.fill);
-          });
-
-function getOffset(pos) {
-  var pos = pos - 1;
-  var offset = (pos) * sideLength + (gutter * pos);
-  return offset;
-}
-
-function save() {
-  var arr = [];
-  canvas.each(function(data){
-    arr.push(data);
-  });
-  console.log(JSON.stringify(arr));
-}
-
-function clearGrid() {
-  $('#chart').html('');
-}
-
-function initializeGrid() {
-  return d3.select('#chart').append('svg')
-                .attr("width", width)
-                .attr("height", height)
-                .attr("class", "chart");
-}
-
-function loadGrid(grid, data) {
-  debugger;
-  var canvas = grid.selectAll(".col")
-          .data(data)
-          .enter().append("rect")
-          .attr("x", function(d) { return getOffset(d.col); })
-          .attr("y", function(d) { return getOffset(d.row); })
-          .attr("class", "box")
-          .attr("width", sideLength)
-          .attr("height", sideLength)
-          .attr('data-col', function(d) { return d.col; })
-          .attr('data-row', function(d) { return d.row; })
-          .style("fill", function(d) { return d.color; })
-          .on('mouseover', function() {
-            this.style.fill = getHoverColor(this.style.fill);
-          })
-          .on('mouseout', function() {
-            this.style.fill = getFillColor(this.style.fill);
-          })
-          .on("click", function(param){
             this.style.fill = getToggleColor(this.style.fill);
           });
 }
@@ -134,10 +103,14 @@ function resetGrid(data) {
 }
 
 function loadFromFile() {
-  d3.json('documents/test.json', function(error, data){
+  d3.json('documents/bob_the_robot.json', function(error, data){
     if (!!error) throw error;
     resetGrid(data);
   });
+}
+
+function initialize() {
+  resetGrid(getBaseData());
 }
 
 
@@ -149,6 +122,8 @@ $(function() {
   $('#load').on('click', function() {
     loadFromFile();
   });
+
+  initialize();
 });
 
 
