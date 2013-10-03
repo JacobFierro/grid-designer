@@ -102,8 +102,8 @@ function resetGrid(data) {
   loadGrid(grid, data);
 }
 
-function loadFromFile() {
-  d3.json('documents/bob_the_robot.json', function(error, data){
+function loadFromFile(file) {
+  d3.json('documents/' + file, function(error, data){
     if (!!error) throw error;
     resetGrid(data);
   });
@@ -120,7 +120,7 @@ $(function() {
   });
 
   $('#load').on('click', function() {
-    loadFromFile();
+    loadFromFile('smilepus.json');
   });
 
   initialize();
