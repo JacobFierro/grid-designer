@@ -1,0 +1,25 @@
+{
+  "name": "grid-designer",
+  "preferGlobal": true,
+  "version": "0.0.1",
+  "author": "Jacob Fierro <jacob.fierro@gmail.com>",
+  "description": "a tool for creating grid based vector designs",
+  "bin": {},
+  "scripts": {},
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JacobFierro/grid-designer.git"
+  },
+  "keywords": [],
+  "dependencies" : {
+    "simple-api" : "0.1.0"
+  },
+  "analyze": false,
+  "devDependencies": {},
+  "bundledDependencies": [],  
+  "license": "MIT",
+  "engines": {
+    "node": "=0.10.20"
+  }
+}
